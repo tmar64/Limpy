@@ -1,3 +1,5 @@
+Description: emulates linux file system.
+
 # define the root of the file system
 root = {
     'name': '/',
