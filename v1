@@ -1,0 +1,89 @@
+# define the root of the file system
+root = {
+    'name': '/',
+    'type': 'directory',
+    'children': []
+}
+
+# define the current directory
+current_dir = root
+
+# define a function to list the contents of the current directory
+def ls():
+    for child in current_dir['children']:
+        print(child['name'])
+
+# define a function to print the current working directory
+def pwd():
+    print('/' + current_dir['name'])
+
+# define a function to create a new directory
+def mkdir(dir_name):
+    new_dir = {
+        'name': dir_name,
+        'type': 'directory',
+        'children': []
+    }
+    current_dir['children'].append(new_dir)
+
+# define a function to change the current directory
+def cd(dir_name):
+    global current_dir
+    for child in current_dir['children']:
+        if child['name'] == dir_name:
+            current_dir = child
+            return
+    print('Directory not found')
+
+# define a function to create a new file
+def touch(file_name):
+    new_file = {
+        'name': file_name,
+        'type': 'file'
+    }
+    current_dir['children'].append(new_file)
+
+# define a function to remove a file or directory
+def rm(name):
+    for child in current_dir['children']:
+        if child['name'] == name:
+            current_dir['children'].remove(child)
+            return
+    print('File or directory not found')
+
+# define a function to recursively search for a given file
+def locate(file_name, directory):
+    for child in directory['children']:
+        if child['name'] == file_name:
+            print(directory['name'])
+            return
+        elif child['type'] == 'directory':
+            locate(file_name, child)
+
+# define a main loop to run the script
+while True:
+    # prompt the user for a command
+    cmd = input('> ')
+
+    # split the command into parts
+    parts = cmd.split()
+
+    # check the command and run the corresponding function
+    if parts[0] == 'ls':
+        ls()
+    elif parts[0] == 'pwd':
+        pwd()
+    elif parts[0] == 'mkdir':
+        mkdir(parts[1])
+    elif parts[0] == 'cd':
+        cd(parts[1])
+    elif parts[0] == 'touch':
+        touch(parts[1])
+    elif parts[0] == 'rm':
+        rm(parts[1])
+    elif parts[0] == 'locate':
+        locate(parts[1], root)
+    elif parts[0] == 'exit':
+        break
+    else:
+        print('Invalid')
